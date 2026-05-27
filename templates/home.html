@@ -1,0 +1,133 @@
+{% extends 'base.html' %} {% block content %}
+
+<div class="header-section">
+  <h1 class="heading-text">Resume Analysing Dashboard</h1>
+  <p>
+    Detailed editorial review of your professional trajectory and ATS
+    compatibility.
+  </p>
+</div>
+
+<div class="row g-4 justify-content-center">
+  <div class="col-md-8">
+    <div class="upload-box">
+      <form class="upload-form" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row input-row g-3">
+          <div class="col-12 col-md-6 name-input-div">
+            <input
+              type="text"
+              name="name"
+              placeholder="Your Name"
+              class="form-control"
+              required
+            />
+          </div>
+          <div class="col-12 col-md-6 role-div-input">
+            <input
+              type="text"
+              placeholder="Job Title"
+              class="form-control"
+              name="role"
+              required
+            />
+          </div>
+        </div>
+        <textarea
+          class="form-control job_description"
+          name="job_description"
+          id="job_description"
+          placeholder="Job Description"
+          required
+        ></textarea>
+        <div class="upload-icon">
+          <i class="fa-solid fa-file-arrow-up"></i>
+        </div>
+
+        <h4 class="mt-3">Upload Your Resume</h4>
+        <p class="text-muted">
+          Drag and drop your PDF or DOCX file here to start the AI evaluation.
+        </p>
+        {% if file_name %}
+        <p class="text-success">{{file_name}}</p>
+        {% endif %}
+        <input type="file" id="fileInput" name="file" hidden />
+        <button type="button" class="upload-resume" onclick="openFileInput()">
+          Browse Files
+        </button>
+
+        <button type="submit" class="btn browse-btn mt-3">
+          Analyze Resume
+        </button>
+      </form>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="score-box">
+      <p>Overall Compatibility Score</p>
+      <div
+        class="score-circle"
+        style="background: conic-gradient(#831ADA {{ score }}%, #e0e0e0 0%);"
+      >
+        <h4>{{ score }}</h4>
+        <p>Out of 100</p>
+      </div>
+      <h5 class="mt-3">{{ label_text }}</h5>
+      <p class="text-muted">{{ sub_text }}</p>
+    </div>
+  </div>
+</div>
+
+<div class="row mt-4 g-3">
+  <div class="col-md-4">
+    <div class="skills-div">
+      <div class="skills-head">
+        <i class="fa-solid fa-circle-check"></i>
+        <h5>Skills Identified</h5>
+      </div>
+      <div class="skills">
+        {% for skill in found_skills %}
+        <p class="skill">{{ skill }}</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="missing-skills-div">
+      <div class="missing-skills">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <h5>Missing Skills</h5>
+      </div>
+      {% if missing_skills%} {% for skill in missing_skills %}
+      <div class="suggestion-skills">
+        <p class="s-skill">{{ skill }}</p>
+        <span class="value">High Impact</span>
+      </div>
+      {% endfor %} {% endif %}
+    </div>
+  </div>
+  <div class="col-md-4 suggestion-div">
+    <div class="suggestion-card">
+      <div class="card-header">
+        <i class="fa-regular fa-lightbulb"></i>
+        <h5>AI Suggestions</h5>
+      </div>
+
+      {% if suggestions and is_submitted %} {% for suggestion in suggestions %}
+      <div class="suggestion-item">
+        {% if suggestion.heighlight %}
+        <p class="text-warning">{{ suggestion.heighlight }}</p>
+        {% endif %}
+        <h6>{{ suggestion.title }}</h6>
+        <p>{{ suggestion.description }}</p>
+      </div>
+      {% endfor %} {% elif not is_submitted %}
+      <p>Submit your resume to get suggestions</p>
+      {% else %}
+      <p>No suggestions found</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

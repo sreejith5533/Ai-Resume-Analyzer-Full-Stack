@@ -1,0 +1,71 @@
+{% extends "base.html" %} {% block content %}
+<div class="container mt-4">
+  <div class="row g-3 ">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <h3 class="card-title">Resume Details</h3>
+          <h5>{{ resume.name }}</h5>
+          <p class="resume-role">{{ resume.role }}</p>
+          <p class="resume-score">Score : {{ resume.score }}</p>
+          <p class="upload-at">Uploaded At : {{ resume.uploaded_at|date:"d M Y, h:i A" }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+            <h5>Job Discription</h5>
+            <p>{{ resume.job_description }}</p>
+          </div>
+        </div>
+    </div>
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <h5>Jd Skills</h5>
+          {% if jd_skills %}
+          {% for skill in jd_skills %}
+          <span class="badge bg-warning">{{ skill }}</span>
+          {% endfor %}
+          {% else %}
+          <p>No jd skills</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <h5>Matching Skills</h5>
+          {% if matching_skills %}
+          {% for skill in matching_skills %}
+          <span class="badge bg-success">{{ skill }}</span>
+          {% endfor %}
+          {% else %}
+          <p>No matching skills</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <h5>Missing Skills</h5>
+          {% if missing_skills %}
+          {% for skill in missing_skills %}
+          <span class="badge bg-danger">{{ skill }}</span>
+          {% endfor %}
+          {% else %}
+          <p>No missing skills</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
+
+
+

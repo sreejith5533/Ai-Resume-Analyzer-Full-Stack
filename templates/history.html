@@ -1,0 +1,99 @@
+{% extends 'base.html' %} {% block content %}
+
+<div class="row mt-3">
+  <div class="col-md-6">
+    <h3 class="heading-text">Analysis History</h3>
+    <small>View and manage your previously analyzed resumes</small>
+  </div>
+  <div class="search-div col-md-6 text-end">
+    <form method="GET" action="{% url 'history' %}">
+      <div class="input-group mb-3">
+        <input
+          type="text"
+          name="q"c
+          class="form-control"
+          placeholder="Search the history by name"
+          value="{{ request.GET.q }}"
+        />
+        <button class="btn search-btn" type="submit" id="button-addon2">
+          Search
+        </button>
+      </div>
+    </form>
+
+    <a href="{% url 'delete_all' %}" class="btn btn-danger">
+      <i class="fa-regular fa-trash-can"></i>
+      Delete All
+    </a>
+  </div>
+</div>
+<div class="row mt-3 g-3">
+  {% for resume in resumes %}
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-heading">
+        <div
+          class="history-score-div"
+          style="background: conic-gradient(#831ADA {{ resume.score }}%, #e0e0e0 0%);"
+        >
+          <p>{{ resume.score }}</p>
+        </div>
+        <a
+          href="{% url 'delete_resume' resume.id %}"
+          class="delete-btn"
+          onclick="return confirm('Are you sure to delete?');"
+        >
+          <i class="fa-regular fa-trash-can"></i>
+        </a>
+      </div>
+      <div class="card-body">
+        <h5 class="name">{{ resume.name }}</h5>
+        <p class="role">{{ resume.role }}</p>
+        <small class="date">
+          <i class="fa-regular fa-calendar"></i>
+          {{ resume.uploaded_at|date:"d M Y, h:i A" }}
+        </small>
+        <a
+          href="{% url 'resume_detail' resume.id %}"
+          class="btn btn-primary details-btn"
+        >
+          View Details
+          <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<nav aria-label="Page navigation example">
+  <ul class="pagination">
+    {% if resumes.has_previous %}
+    <li class="page-item">
+      <a class="page-link" href="?page={{ resumes.previous_page_number }}"
+        >Previous</a
+      >
+    </li>
+    {% else %}
+    <li class="page-item disabled">
+      <span class="page-link">Previous</span>
+    </li>
+    {% endif %} {% for num in resumes.paginator.page_range %}
+    <li
+      class="page-item numbers {% if resumes.number == num %} active {% endif %}"
+    >
+      <a class="page-link" href="?page={{num}}">{{num}}</a>
+    </li>
+    {% endfor %} {% if resumes.has_next %}
+    <li class="page-item {% if resumes.number == num %} active {% endif %}">
+      <a class="page-link" href="?page={{ resumes.next_page_number }}">Next</a>
+    </li>
+    {% else %}
+    <li class="page-item disabled">
+      <span class="page-link">Next</span>
+    </li>
+    {% endif %}
+  </ul>
+</nav>
+
+{% endblock content %}
