@@ -98,6 +98,7 @@
 .profile-div {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 10px;
 }
 
@@ -171,16 +172,12 @@
 }
 
 
-.role-div-input{
-  padding-left: 0 !important ;
-}
 
 .suggestion-card {
   border: 1px solid #3525cd;
   border-radius: 4px;
   /* fake left 3px border */
   box-shadow: inset 3px 0 0 #3525cd;
-  
 }
 
 .card-header {
@@ -299,10 +296,10 @@
   width: 100% !important;
 }
 
-.name-input-div {
-  padding-left: 0 !important;
+.job-description-div{
+  padding: 0 4px;
+  width: 100%;
 }
-
 
 .name,
 .role {
@@ -369,15 +366,34 @@ footer p {
   color: #32294f !important;
 }
 
-
-
-.resume-role, .resume-score , .upload-at{
+.resume-role,
+.resume-score,
+.upload-at {
   margin-bottom: 0;
+}
+
+.footer {
+  background: rgb(244, 250, 250);
+  color: #32294f;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.footer p {
+  margin-bottom: 0 !important;
+  font-size: 15px;
+  color: #8a8c8f;
+  text-align: center;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+  padding: 15px 10px;
+  line-height: 1.6;
 }
 
 
 
-.footer{
-  background: #000;
-  width: 100%;
+@media (max-width: 468px) {
+  .heading-text {
+    font-size: 20px !important;
+  }
 }

@@ -10,10 +10,10 @@
 
 <div class="row g-4 justify-content-center">
   <div class="col-md-8">
-    <div class="upload-box">
+    <div class="upload-box container">
       <form class="upload-form" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-        <div class="row input-row g-3">
+        <div class="row g-2 input-row">
           <div class="col-12 col-md-6 name-input-div">
             <input
               type="text"
@@ -33,13 +33,15 @@
             />
           </div>
         </div>
-        <textarea
-          class="form-control job_description"
-          name="job_description"
-          id="job_description"
-          placeholder="Job Description"
-          required
-        ></textarea>
+        <div class="job-description-div">
+          <textarea
+            class="form-control job_description"
+            name="job_description"
+            id="job_description"
+            placeholder="Job Description"
+            required
+          ></textarea>
+        </div>
         <div class="upload-icon">
           <i class="fa-solid fa-file-arrow-up"></i>
         </div>
