@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 API_KEY = os.getenv("OPENROUTER_API_KEY")
+print("API KEY", API_KEY)
 
 MASTER_SKILLS = [
     "python",
@@ -87,58 +88,74 @@ def build_fallback_analysis(resume_text, job_description):
 
 
 def get_ai_resume_analysis(resume_text,job_description):
-    try:
+    print("Function Started")
+    resume_text = resume_text[:4000]
+    job_description = job_description[:3000]
+
+    try :
         response = requests.post(
             "https://openrouter.ai/api/v1/chat/completions",
-            headers={
+            headers ={
                 "Authorization": f"Bearer {API_KEY}",
-                "Content-Type": "application/json",
+                "Content-Type": "application/json"
             },
             json={
-                "model": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
+                "model": "nvidia/nemotron-3-super-120b-a12b:free",
                 "messages": [
                     {
-                        "role": "system",
-                        "content" : "You are an ATS analyzer.Return only JSON."
-                    },{
+                        "role" : "system",
+                        "content" : (
+                            "You are an ATS Resume Analyzer. "
+                            "Return only clean valid JSON."
+                        )
+                    },
+                    {
                         "role" : "user",
                         "content" : f"""
 Resume : {resume_text}
+Job Description : {job_description}
 
-Job Description :
-{job_description}
 
-Return JSON only:
+Return JSON only :
 {{
-    "resume_skills": [],
-    "jd_skills": [],
-    "matching_skills": [],
-    "missing_skills": [],
-    "suggestions": [],
-    "score": 0
+    "resume_skills" : [],
+    "jd_skills" :  [],
+    "matching_skills" : [],
+    "missing_skills" : [],
+    "score" : 0,
+    "suggestions" : [],
+    "source"  :  "ai"
 }}
 """
                     }
-                ]
-
-            }
+                ],
+                "temperature": 0.3
+            },
+            timeout=20
         )
 
-        result = response.json()
-        ai_text = result["choices"][0]["message"]["content"]
-        parsed = json.loads(ai_text)
-        parsed["source"] = "ai"
+        print("After api call")
 
-        return parsed
-    
+        print("status:", response.status_code)
+        print("text:", response.text)
+        print("json:", response.json())
+        data = response.json()
+        if "choices" not in data :
+            print("No choices found")
+            return build_fallback_analysis(resume_text,job_description)
+        ai_content = data['choices'][0]['message']['content']
+        cleaned_json = ai_content.strip()
+        cleaned_json = cleaned_json.replace("```json", "")
+        cleaned_json = cleaned_json.replace("```", "")
+        cleaned_json = cleaned_json.strip()
+        result = json.loads(cleaned_json)
+        return result
     except Exception as e:
-        print("AI ERROR",e)
-        return {
-            "resume_skills": [],
-            "jd_skills": [],
-            "matching_skills": [],
-            "missing_skills": [],
-            "suggestions": ["AI failed"],
-            "score": 0,
-            "source": "fallback"
-        }
+        print("\nERROR OCCURED")
+        print(type(e))
+        print(e)
+
+        raise
+
+        
+  
